@@ -1,0 +1,151 @@
+{
+    "id": "org.kde.buho",
+    "rename-icon": "buho",
+    "runtime": "org.kde.Platform",
+    "runtime-version": "5.15-22.08",
+    "sdk": "org.kde.Sdk",
+    "command": "buho",
+    "finish-args": [
+        "--share=ipc",
+        "--share=network",
+        "--socket=fallback-x11",
+        "--socket=wayland",
+        "--device=dri"
+    ],
+    "modules": [
+        {
+            "name": "qtsystems",
+            "buildsystem": "qmake",
+            "config-opts": [
+                "CONFIG+=git_build"
+            ],
+            "build-options": {
+                "env": [
+                    "QMAKEPATH=/app/lib"
+                ]
+            },
+            "build-commands": [
+                "sed 's@\\($(INSTALL_ROOT)\\)/usr@\\1/'${FLATPAK_DEST}'@g' -i $(find . -name Makefile)"
+            ],
+            "post-install": [
+                "sed -i 's/\\([0-9]\\+\\.[0-9]\\+\\)\\.[0-9]\\+ ${_Qt5.*_FIND_VERSION_EXACT}/\\1/' ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/cmake/Qt5SystemInfo*/Qt5SystemInfo*Config.cmake",
+                "sed -e 's@PATHS \"${CMAKE_CURRENT_LIST_DIR}/..\" NO_DEFAULT_PATH@PATHS \"${CMAKE_CURRENT_LIST_DIR}/..\" \"/usr/lib/${CMAKE_CXX_LIBRARY_ARCHITECTURE}/cmake/\" NO_DEFAULT_PATH@' -i ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/cmake/Qt5SystemInfo*/Qt5SystemInfo*Config.cmake",
+                "sed -e '/^prefix=/ s@/usr@'${FLATPAK_DEST}'@' -i ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/pkgconfig/Qt5SystemInfo*.pc",
+                "sed -e 's@\\($$QT_MODULE_BIN_BASE\\)@\\1 '${FLATPAK_DEST}'/bin @' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_systeminfo*.pri",
+                "sed -e 's@\\($$QT_MODULE_INCLUDE_BASE \\)@\\1'${FLATPAK_DEST}'/include @' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_systeminfo*.pri",
+                "sed -e 's@$$QT_MODULE_INCLUDE_BASE/@'${FLATPAK_DEST}'/include/@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_systeminfo*.pri",
+                "sed -e 's@$$QT_MODULE_LIB_BASE@'${FLATPAK_DEST}'/lib@g' -i ${FLATPAK_DEST}/lib/mkspecs/modules/qt_lib_systeminfo*.pri",
+                "ln -sr ${FLATPAK_DEST}/lib/${FLATPAK_ARCH}-linux-gnu/libQt*SystemInfo.so* -t ${FLATPAK_DEST}/lib/"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/qtproject/qtsystems/archive/e3332ee38d27a134cef6621fdaf36687af1b6f4a.tar.gz",
+                    "sha256": "5259cf350e5e1f755c53bcba066dd40fea7b20f4e661b0973b24ae46454a9e75"
+                }
+            ]
+        },
+        {
+            "name": "mauiman",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://download.kde.org/stable/maui/mauiman/1.0.2/mauiman-1.0.2.tar.xz",
+                    "sha256": "c49ea08d4b51efb4c6ab95699e837cd5482edbfbd5e45b462a5811208787726c",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 315311,
+                        "stable-only": true,
+                        "url-template": "https://download.kde.org/stable/maui/mauiman/$version/mauiman-$version.tar.xz"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "mauikit",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "sha256": "0b7eb6517e933757b09ad346189bf50d9269d0ca05559bba5f4edbbe26b8d157",
+                    "url": "https://download.kde.org/stable/maui/mauikit/2.2.2/mauikit-2.2.2.tar.xz",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 242845,
+                        "stable-only": true,
+                        "url-template": "https://download.kde.org/stable/maui/mauikit/$version/mauikit-$version.tar.xz"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "mauikit-filebrowsing",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://download.kde.org/stable/maui/mauikit-filebrowsing/2.2.2/mauikit-filebrowsing-2.2.2.tar.xz",
+                    "sha256": "7949629e7b2ffd61f6d3f3c3f8589c0eb2c575ee2fc2e93b710f043215364036",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 242845,
+                        "stable-only": true,
+                        "url-template": "https://download.kde.org/stable/maui/mauikit-filebrowsing/$version/mauikit-filebrowsing-$version.tar.xz"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "mauikit-account",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://download.kde.org/stable/maui/mauikit-accounts/2.2.2/mauikit-accounts-2.2.2.tar.xz",
+                    "sha256": "48471e61acf61543b9b6dca76b6bafe95b00f041784f55304aaeae528bff3b83",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 242845,
+                        "stable-only": true,
+                        "url-template": "https://download.kde.org/stable/maui/mauikit-accounts/$version/mauikit-accounts-$version.tar.xz"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "mauikit-texteditor",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://download.kde.org/stable/maui/mauikit-texteditor/2.2.2/mauikit-texteditor-2.2.2.tar.xz",
+                    "sha256": "8f7ddfde097b8aded0ae65bf792a3478eec48685798805850838c6647f07163d",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 242845,
+                        "stable-only": true,
+                        "url-template": "https://download.kde.org/stable/maui/mauikit-texteditor/$version/mauikit-texteditor-$version.tar.xz"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "buho",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://download.kde.org/stable/maui/buho/2.2.2/buho-2.2.2.tar.xz",
+                    "sha256": "e879ef293b47dda3d0faf57d96c0c9129bf8500587da8d1457ca90591b196f4f",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 242845,
+                        "stable-only": true,
+                        "url-template": "https://download.kde.org/stable/maui/buho/$version/buho-$version.tar.xz"
+                    }
+                }
+            ]
+        }
+    ]
+}
