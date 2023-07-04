@@ -133,6 +133,10 @@
         {
             "name": "buho",
             "buildsystem": "cmake-ninja",
+            "post-install": [
+                "sed -i 's|https://nxos.org/wp-content/uploads/2021/05/buho-stable-1024x723.png|https://mauikit.org/wp-content/uploads/2021/08/buho.png|g' ${FLATPAK_DEST}/share/metainfo/${FLATPAK_ID}.metainfo.xml",
+                "sed -i 's|<caption>Buho</caption>|<caption>Buho notes overview</caption>|g' ${FLATPAK_DEST}/share/metainfo/${FLATPAK_ID}.metainfo.xml"
+            ],
             "sources": [
                 {
                     "type": "archive",
